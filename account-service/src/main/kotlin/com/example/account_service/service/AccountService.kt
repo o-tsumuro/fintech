@@ -28,4 +28,22 @@ class AccountService(
 
         accountRepository.save(account)
     }
+
+    @Transactional
+    fun withdraw(accountId: Long, amount: Long) {
+        if (amount <= 0) {
+            throw RuntimeException("invalid amount")
+        }
+
+        val account = accountRepository.findById(accountId)
+            .orElseThrow { RuntimeException("account not found") }
+
+        if (account.balance < amount) {
+            throw RuntimeException("insufficient balance")
+        }
+
+        account.balance -= amount
+
+        accountRepository.save(account)
+    }
 }
