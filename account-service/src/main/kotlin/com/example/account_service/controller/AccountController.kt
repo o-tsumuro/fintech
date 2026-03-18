@@ -14,4 +14,14 @@ class AccountController(
         val balance = accountService.getBalance(id)
         return mapOf("balance" to balance)
     }
+
+    @PostMapping("/deposit")
+    fun deposit(@RequestBody request: DepositRequest) {
+        accountService.deposit(request.accountId, request.amount)
+    }
+
+    @PostMapping("/withdraw")
+    fun withdraw(@RequestBody request: WithdrawRequest) {
+        accountService.withdraw(request.accountId, request.amount)
+    }
 }
