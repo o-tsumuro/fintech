@@ -12,5 +12,5 @@ data class Account(
 
     val name: String,
 
-    val balance: Long
+    var balance: Long
 )
