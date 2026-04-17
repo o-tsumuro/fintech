@@ -46,4 +46,25 @@ class AccountService(
 
         accountRepository.save(account)
     }
+
+    @Transactional
+    fun transfer(fromId: Long, toId: Long, amount: Long) {
+
+        if (amount <= 0) {
+            throw RuntimeException("invalid amount")
+        }
+
+        val from = accountRepository.findById(fromId)
+            .orElseThrow { RuntimeException("from account not found") }
+
+        val to = accountRepository.findById(toId)
+            .orElseThrow { RuntimeException("to account not found") }
+
+        if (from.balance < amount) {
+            throw RuntimeException("insufficient balance")
+        }
+
+        from.balance -= amount
+        to.balance += amount
+    }
 }
