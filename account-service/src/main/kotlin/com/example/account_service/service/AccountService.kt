@@ -1,12 +1,16 @@
 package com.example.account_service.service
 
 import com.example.account_service.repository.AccountRepository
+import com.example.account_service.repository.IdempotencyKeyRepository
+import com.example.account_service.model.IdempotencyKey
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+
 @Service
 class AccountService(
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val idempotencyKeyRepository: IdempotencyKeyRepository
 ) {
     fun getBalance(accountId: Long): Long {
         val account = accountRepository.findById(accountId)
@@ -48,7 +52,12 @@ class AccountService(
     }
 
     @Transactional
-    fun transfer(fromId: Long, toId: Long, amount: Long) {
+    fun transfer(
+        fromId: Long,
+        toId: Long,
+        amount: Long,
+        key: String
+    ) {
 
         if (amount <= 0) {
             throw RuntimeException("invalid amount")
@@ -66,5 +75,7 @@ class AccountService(
 
         from.balance -= amount
         to.balance += amount
+
+        idempotencyKeyRepository.save(IdempotencyKey(key))
     }
 }
