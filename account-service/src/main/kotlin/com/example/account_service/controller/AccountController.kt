@@ -24,4 +24,13 @@ class AccountController(
     fun withdraw(@RequestBody request: WithdrawRequest) {
         accountService.withdraw(request.accountId, request.amount)
     }
+
+    @PostMapping("/transfer")
+    fun transfer(@RequestBody request: TransferRequest) {
+        accountService.transfer(
+            request.fromAccountId,
+            request.toAccountId,
+            request.amount
+        )
+    }
 }
