@@ -4,4 +4,5 @@ data class TransferRequest (
     val fromAccountId: Long,
     val toAccountId: Long,
     val amount: Long,
+    val idempotencyKey: String,
 )
