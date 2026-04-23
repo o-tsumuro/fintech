@@ -30,7 +30,8 @@ class AccountController(
         accountService.transfer(
             request.fromAccountId,
             request.toAccountId,
-            request.amount
+            request.amount,
+            request.idempotencyKey,
         )
     }
 }
