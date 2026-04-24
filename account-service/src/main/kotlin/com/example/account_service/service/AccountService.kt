@@ -59,6 +59,14 @@ class AccountService(
 
         account.balance -= amount
 
+        ledgerRepository.save(
+            Ledger(
+                accountId = accountId,
+                amount =  -amount,
+                type =  "WITHDRAW"
+            )
+        )
+
         accountRepository.save(account)
     }
 
