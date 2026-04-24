@@ -113,4 +113,11 @@ class AccountService(
 
         idempotencyKeyRepository.save(IdempotencyKey(key))
     }
+
+    fun getBalanceFromLedger(accountId: Long): Long {
+
+        val records = ledgerRepository.findByAccountId(accountId)
+
+        return records.sumOf { it.amount }
+    }
 }
