@@ -1,12 +1,15 @@
 package com.example.account_service.controller
 
 import com.example.account_service.service.AccountService
+import com.example.account_service.model.Ledger
+import com.example.account_service.repository.LedgerRepository
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/accounts")
 class AccountController(
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val ledgerRepository: LedgerRepository
 ) {
 
     @GetMapping("/{id}/balance")
@@ -33,5 +36,10 @@ class AccountController(
             request.amount,
             request.idempotencyKey,
         )
+    }
+
+    @GetMapping("/{id}/transactions")
+    fun getTransactions(@PathVariable id: Long): List<Ledger> {
+        return ledgerRepository.findByAccountId(id)
     }
 }
