@@ -14,6 +14,8 @@ data class Ledger(
 
     val accountId: Long,
 
+    val amount: Long,
+
     val type: String,
 
     val createdAt: LocalDateTime = LocalDateTime.now()
