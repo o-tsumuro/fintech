@@ -3,6 +3,8 @@ package com.example.account_service.service
 import com.example.account_service.repository.AccountRepository
 import com.example.account_service.repository.IdempotencyKeyRepository
 import com.example.account_service.model.IdempotencyKey
+import com.example.account_service.repository.LedgerRepository
+import com.example.account_service.model.Ledger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
+    private val ledgerRepository: LedgerRepository,
     private val idempotencyKeyRepository: IdempotencyKeyRepository
 ) {
     fun getBalance(accountId: Long): Long {
@@ -29,6 +32,14 @@ class AccountService(
             .orElseThrow { RuntimeException("account not found") }
 
         account.balance += amount
+
+        ledgerRepository.save(
+            Ledger(
+                accountId = accountId,
+                amount = amount,
+                type = "DEPOSIT"
+            )
+        )
 
         accountRepository.save(account)
     }
