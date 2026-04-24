@@ -95,6 +95,22 @@ class AccountService(
         from.balance -= amount
         to.balance += amount
 
+        ledgerRepository.save(
+            Ledger(
+                accountId = fromId,
+                amount = -amount,
+                type = "TRANSFER_OUT"
+            )
+        )
+
+        ledgerRepository.save(
+            Ledger(
+                accountId = toId,
+                amount = amount,
+                type = "TRANSFER_IN"
+            )
+        )
+
         idempotencyKeyRepository.save(IdempotencyKey(key))
     }
 }
